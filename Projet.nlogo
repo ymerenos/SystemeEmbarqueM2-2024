@@ -1,109 +1,63 @@
-extensions [ gis ]
+extensions [gis]
 
-to cls
-  ca
+globals [streets-dataset roads]
+
+turtles-own [
+  destination
+]
+
+to setup
+  clear-all
+  resize-world 0 1000 0 1000
+  set-patch-size 0.5
+  set streets-dataset gis:load-dataset "routes/roads.shp"
+  gis:set-world-envelope (gis:envelope-of streets-dataset)
+
+  ask patches gis:intersecting streets-dataset [
+    set pcolor grey
+  ]
+
+  set roads patches with [pcolor = grey]
+  create-turtles 1000 [
+    spawn-cars
+    set size 4
+  ]
+  reset-ticks
 end
 
-to load-nodes-motorway
-  let view gis:load-dataset "routes/points_motorway.shp"
-  gis:set-world-envelope-ds gis:envelope-of view
-  gis:set-drawing-color white
-  gis:draw view 1.0
+to spawn-cars
+  move-to one-of roads
+  set destination one-of roads
 end
 
-to load-nodes-primary
-  let view gis:load-dataset "routes/points_primary.shp"
-  gis:set-world-envelope-ds gis:envelope-of view
-  gis:set-drawing-color white
-  gis:draw view 1.0
+to go
+  ask turtles [
+    if not at-destination? [
+      move-along-road
+    ]
+  ]
+  tick
 end
 
-to load-motorway
-  let view gis:load-dataset "routes/roads_motorway.shp"
-  gis:set-world-envelope-ds gis:envelope-of view
-  gis:set-drawing-color white
-  gis:draw view 1.0
+to move-along-road
+  let potential-next-patches neighbors4 in-radius 1
+  let next-patch one-of potential-next-patches with [pcolor = grey]
+  face next-patch
+  fd 1
 end
 
-to load-primary
-  let view gis:load-dataset "routes/roads_primary.shp"
-  gis:set-world-envelope-ds gis:envelope-of view
-  gis:set-drawing-color white
-  gis:draw view 1.0
-end
-
-to load-secondary
-  let view gis:load-dataset "routes/roads_secondary.shp"
-  gis:set-world-envelope-ds gis:envelope-of view
-  gis:set-drawing-color white
-  gis:draw view 1.0
-end
-
-to load-tertiary
-  let view gis:load-dataset "routes/roads_tertiary.shp"
-  gis:set-world-envelope-ds gis:envelope-of view
-  gis:set-drawing-color white
-  gis:draw view 1.0
-end
-
-to load-motorway-link
-  let view gis:load-dataset "routes/roads_motorway_link.shp"
-  gis:set-world-envelope-ds gis:envelope-of view
-  gis:set-drawing-color yellow
-  gis:draw view 1.0
-end
-
-to load-primary-link
-  let view gis:load-dataset "routes/roads_primary_link.shp"
-  gis:set-world-envelope-ds gis:envelope-of view
-  gis:set-drawing-color yellow
-  gis:draw view 1.0
-end
-
-to load-secondary-link
-  let view gis:load-dataset "routes/roads_secondary_link.shp"
-  gis:set-world-envelope-ds gis:envelope-of view
-  gis:set-drawing-color yellow
-  gis:draw view 1.0
-end
-
-to load-tertiary-link
-  let view gis:load-dataset "routes/roads_tertiary_link.shp"
-  gis:set-world-envelope-ds gis:envelope-of view
-  gis:set-drawing-color yellow
-  gis:draw view 1.0
-end
-
-
-to load-trunk
-  let view gis:load-dataset "routes/roads_trunk.shp"
-  gis:set-world-envelope-ds gis:envelope-of view
-  gis:set-drawing-color red
-  gis:draw view 1.0
-end
-
-to load-trunk-link
-  let view gis:load-dataset "routes/roads_trunk_link.shp"
-  gis:set-world-envelope-ds gis:envelope-of view
-  gis:set-drawing-color red
-  gis:draw view 1.0
-end
-
-to load-raceway
-  let view gis:load-dataset "routes/roads_raceway.shp"
-  gis:set-world-envelope-ds gis:envelope-of view
-  gis:set-drawing-color red
-  gis:draw view 1.0
+to-report at-destination?
+  report patch-here = destination
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
 210
 10
-647
-448
+969
+770
 -1
 -1
-13.0
+1.5
 1
 10
 1
@@ -113,10 +67,10 @@ GRAPHICS-WINDOW
 1
 1
 1
--16
-16
--16
-16
+0
+500
+0
+500
 0
 0
 1
@@ -124,12 +78,12 @@ ticks
 30.0
 
 BUTTON
-60
-56
-204
-89
-load-motorways
-load-motorway\n
+48
+594
+111
+627
+NIL
+setup
 NIL
 1
 T
@@ -141,227 +95,13 @@ NIL
 1
 
 BUTTON
-83
-93
-203
-126
+529
+601
+592
+634
 NIL
-load-primary
-NIL
-1
+go
 T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-61
-131
-203
-164
-NIL
-load-secondary
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-84
-169
-203
-202
-NIL
-load-tertiary\n
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-55
-330
-203
-363
-NIL
-load-tertiary-link\n\n
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-122
-10
-204
-43
-Effacer
-cls
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-54
-255
-203
-288
-NIL
-load-primary-link
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-32
-292
-203
-325
-NIL
-load-secondary-link
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-CHOOSER
-656
-10
-794
-55
-meteorologie
-meteorologie
-"beau-temps" "pluie" "brouillard" "vent" "tempete" "neige"
-2
-
-BUTTON
-38
-218
-203
-251
-NIL
-load-motorway-link
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-754
-194
-858
-227
-Bugatti
-load-raceway
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-862
-250
-967
-283
-NIL
-load-trunk
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-775
-327
-909
-360
-NIL
-load-trunk-link
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-726
-149
-912
-182
-NIL
-load-nodes-motorway
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-1052
-157
-1222
-190
-NIL
-load-nodes-primary
-NIL
 1
 T
 OBSERVER

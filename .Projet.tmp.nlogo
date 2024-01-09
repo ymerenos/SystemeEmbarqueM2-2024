@@ -8,9 +8,9 @@ turtles-own [
 
 to setup
   clear-all
-  resize-world 0 200 0 200
-  set-patch-size 2.5
-  set streets-dataset gis:load-dataset "routes/roads_tertiary.shp"
+  resize-world 0 50 0 500
+  set-patch-size 1.5
+  set streets-dataset gis:load-dataset "routes/roads.shp"
   gis:set-world-envelope (gis:envelope-of streets-dataset)
 
   ask patches gis:intersecting streets-dataset [
@@ -53,11 +53,11 @@ end
 GRAPHICS-WINDOW
 210
 10
-720
-521
+969
+770
 -1
 -1
-2.5
+1.5
 1
 10
 1
@@ -68,65 +68,14 @@ GRAPHICS-WINDOW
 1
 1
 0
-200
+500
 0
-200
+500
 0
 0
 1
 ticks
 30.0
-
-BUTTON
-37
-26
-181
-59
-load-motorways
-load-motorways\n
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-83
-89
-203
-122
-NIL
-load-primary
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-22
-138
-164
-171
-NIL
-load-secondary
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
 
 BUTTON
 48
