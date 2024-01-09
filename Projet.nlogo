@@ -18,7 +18,7 @@ to setup
   ]
 
   set roads patches with [pcolor = grey]
-  create-turtles 1000 [
+  create-turtles 100 [
     spawn-cars
     set size 4
   ]
@@ -53,11 +53,11 @@ end
 GRAPHICS-WINDOW
 210
 10
-969
-770
+718
+519
 -1
 -1
-1.5
+0.5
 1
 10
 1
@@ -68,9 +68,9 @@ GRAPHICS-WINDOW
 1
 1
 0
-500
+1000
 0
-500
+1000
 0
 0
 1

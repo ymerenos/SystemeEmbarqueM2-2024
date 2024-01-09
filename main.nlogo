@@ -8,9 +8,9 @@ turtles-own [
 
 to setup
   clear-all
-  resize-world 0 1000 0 1000
-  set-patch-size 0.5
-  set streets-dataset gis:load-dataset "routes/roads.shp"
+  resize-world 0 700 0 700
+  set-patch-size 1
+  set streets-dataset gis:load-dataset "routes/le_mans_FINAL.shp"
   gis:set-world-envelope (gis:envelope-of streets-dataset)
 
   ask patches gis:intersecting streets-dataset [
@@ -18,9 +18,9 @@ to setup
   ]
 
   set roads patches with [pcolor = grey]
-  create-turtles 1000 [
+  create-turtles 100 [
     spawn-cars
-    set size 4
+    set size 6
   ]
   reset-ticks
 end
@@ -53,11 +53,11 @@ end
 GRAPHICS-WINDOW
 210
 10
-969
-770
+919
+720
 -1
 -1
-1.5
+1.0
 1
 10
 1
@@ -68,9 +68,9 @@ GRAPHICS-WINDOW
 1
 1
 0
-500
+700
 0
-500
+700
 0
 0
 1
@@ -95,10 +95,10 @@ NIL
 1
 
 BUTTON
-529
-601
-592
-634
+48
+387
+111
+420
 NIL
 go
 T
