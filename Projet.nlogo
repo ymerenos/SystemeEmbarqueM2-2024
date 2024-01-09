@@ -1,7 +1,24 @@
 extensions [ gis ]
 
-to load-motorways
+to cls
   ca
+end
+
+to load-nodes-motorway
+  let view gis:load-dataset "routes/points_motorway.shp"
+  gis:set-world-envelope-ds gis:envelope-of view
+  gis:set-drawing-color white
+  gis:draw view 1.0
+end
+
+to load-nodes-primary
+  let view gis:load-dataset "routes/points_primary.shp"
+  gis:set-world-envelope-ds gis:envelope-of view
+  gis:set-drawing-color white
+  gis:draw view 1.0
+end
+
+to load-motorway
   let view gis:load-dataset "routes/roads_motorway.shp"
   gis:set-world-envelope-ds gis:envelope-of view
   gis:set-drawing-color white
@@ -9,7 +26,6 @@ to load-motorways
 end
 
 to load-primary
-  ca
   let view gis:load-dataset "routes/roads_primary.shp"
   gis:set-world-envelope-ds gis:envelope-of view
   gis:set-drawing-color white
@@ -17,7 +33,6 @@ to load-primary
 end
 
 to load-secondary
-  ca
   let view gis:load-dataset "routes/roads_secondary.shp"
   gis:set-world-envelope-ds gis:envelope-of view
   gis:set-drawing-color white
@@ -25,18 +40,59 @@ to load-secondary
 end
 
 to load-tertiary
-  ca
   let view gis:load-dataset "routes/roads_tertiary.shp"
   gis:set-world-envelope-ds gis:envelope-of view
   gis:set-drawing-color white
   gis:draw view 1.0
 end
 
-to load-road
-  ca
-  let view gis:load-dataset "routes/roads_road.shp"
+to load-motorway-link
+  let view gis:load-dataset "routes/roads_motorway_link.shp"
   gis:set-world-envelope-ds gis:envelope-of view
-  gis:set-drawing-color white
+  gis:set-drawing-color yellow
+  gis:draw view 1.0
+end
+
+to load-primary-link
+  let view gis:load-dataset "routes/roads_primary_link.shp"
+  gis:set-world-envelope-ds gis:envelope-of view
+  gis:set-drawing-color yellow
+  gis:draw view 1.0
+end
+
+to load-secondary-link
+  let view gis:load-dataset "routes/roads_secondary_link.shp"
+  gis:set-world-envelope-ds gis:envelope-of view
+  gis:set-drawing-color yellow
+  gis:draw view 1.0
+end
+
+to load-tertiary-link
+  let view gis:load-dataset "routes/roads_tertiary_link.shp"
+  gis:set-world-envelope-ds gis:envelope-of view
+  gis:set-drawing-color yellow
+  gis:draw view 1.0
+end
+
+
+to load-trunk
+  let view gis:load-dataset "routes/roads_trunk.shp"
+  gis:set-world-envelope-ds gis:envelope-of view
+  gis:set-drawing-color red
+  gis:draw view 1.0
+end
+
+to load-trunk-link
+  let view gis:load-dataset "routes/roads_trunk_link.shp"
+  gis:set-world-envelope-ds gis:envelope-of view
+  gis:set-drawing-color red
+  gis:draw view 1.0
+end
+
+to load-raceway
+  let view gis:load-dataset "routes/roads_raceway.shp"
+  gis:set-world-envelope-ds gis:envelope-of view
+  gis:set-drawing-color red
   gis:draw view 1.0
 end
 @#$#@#$#@
@@ -68,12 +124,12 @@ ticks
 30.0
 
 BUTTON
-37
-26
-181
-59
+60
+56
+204
+89
 load-motorways
-load-motorways\n
+load-motorway\n
 NIL
 1
 T
@@ -86,9 +142,9 @@ NIL
 
 BUTTON
 83
-89
+93
 203
-122
+126
 NIL
 load-primary
 NIL
@@ -102,10 +158,10 @@ NIL
 1
 
 BUTTON
-22
-138
+61
+131
+203
 164
-171
 NIL
 load-secondary
 NIL
@@ -119,10 +175,10 @@ NIL
 1
 
 BUTTON
-52
-192
-171
-225
+84
+169
+203
+202
 NIL
 load-tertiary\n
 NIL
@@ -136,12 +192,175 @@ NIL
 1
 
 BUTTON
-88
-288
-197
-321
+55
+330
+203
+363
 NIL
-load-road\n\n
+load-tertiary-link\n\n
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+122
+10
+204
+43
+Effacer
+cls
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+54
+255
+203
+288
+NIL
+load-primary-link
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+32
+292
+203
+325
+NIL
+load-secondary-link
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+CHOOSER
+656
+10
+794
+55
+meteorologie
+meteorologie
+"beau-temps" "pluie" "brouillard" "vent" "tempete" "neige"
+2
+
+BUTTON
+38
+218
+203
+251
+NIL
+load-motorway-link
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+754
+194
+858
+227
+Bugatti
+load-raceway
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+862
+250
+967
+283
+NIL
+load-trunk
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+775
+327
+909
+360
+NIL
+load-trunk-link
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+726
+149
+912
+182
+NIL
+load-nodes-motorway
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+1052
+157
+1222
+190
+NIL
+load-nodes-primary
 NIL
 1
 T
