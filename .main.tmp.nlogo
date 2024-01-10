@@ -1,13 +1,93 @@
+extensions [gis]
 
+globals [streets-dataset roads cars-on-the-road]
+
+turtles-own [
+  destination
+]
+
+to setup
+  clear-all
+  resize-world 0 500 0 500
+  set-patch-size 1.3
+  set streets-dataset gis:load-dataset "routes/le_mans_FINAL.shp"
+  gis:set-world-envelope (gis:envelope-of streets-dataset)
+
+  ask patches gis:intersecting streets-dataset [
+    set pcolor grey
+  ]
+
+  set roads patches with [pcolor = grey]
+  create-turtles 400 [
+    spawn-cars
+    set size 15
+  ]
+
+  set cars-on-the-road count turtles
+
+  reset-ticks
+end
+
+to spawn-cars
+  move-to one-of roads
+  set destination one-of roads
+end
+
+to go
+  ask turtles [
+    if not at-destination? [
+      move-along-road
+    ]
+    if at-destination? [
+      die
+    ]
+  ]
+
+  set cars-on-the-road count turtles
+
+  tick
+end
+
+to move-along-road
+  let best-way best-way-to destination
+  if best-way != nobody and [pcolor] of best-way = grey [
+    ; If the best way is a grey patch, face it and move forward
+    move-to best-way
+  ]
+end
+
+to-report at-destination?
+  report patch-here = destination
+end
+
+to-report best-way-to [ goal ]
+
+  ; of all the visible route patches, select the ones
+  ; that would take me closer to my destination
+  let visible-patches patches in-radius 5
+  let visible-routes visible-patches with [ pcolor = grey ]
+  let routes-that-take-me-closer visible-routes with [
+    distance goal < [ distance goal - 1 ] of myself
+  ]
+
+  ifelse any? routes-that-take-me-closer [
+    ; from those route patches, choose the one that is the closest to me
+    report min-one-of routes-that-take-me-closer [ distance self ]
+  ] [
+    set destination one-of roads
+    report patch-here
+  ]
+
+end
 @#$#@#$#@
 GRAPHICS-WINDOW
 210
 10
-919
-720
+869
+670
 -1
 -1
-1.0
+1.3
 1
 10
 1
@@ -18,9 +98,9 @@ GRAPHICS-WINDOW
 1
 1
 0
-700
+500
 0
-700
+500
 0
 0
 1
@@ -64,10 +144,10 @@ NIL
 MONITOR
 34
 50
-113
+142
 95
 NIL
-turtles-alive
+cars-on-the-road
 17
 1
 11
