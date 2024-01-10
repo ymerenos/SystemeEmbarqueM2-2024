@@ -1,6 +1,6 @@
 extensions [gis]
 
-globals [streets-dataset roads cars-on-the-road]
+globals [ streets-dataset roads cars-on-the-road cumulated-distance]
 
 turtles-own [
   destination
@@ -8,8 +8,8 @@ turtles-own [
 
 to setup
   clear-all
-  resize-world 0 500 0 500
-  set-patch-size 1.3
+  resize-world 0 700 0 700
+  set-patch-size 1
   set streets-dataset gis:load-dataset "routes/le_mans_FINAL.shp"
   gis:set-world-envelope (gis:envelope-of streets-dataset)
 
@@ -18,13 +18,13 @@ to setup
   ]
 
   set roads patches with [pcolor = grey]
-  create-turtles 400 [
+  create-turtles number-of-cars [
     spawn-cars
     set size 15
   ]
 
   set cars-on-the-road count turtles
-
+  set cumulated-distance 0
   reset-ticks
 end
 
@@ -34,9 +34,11 @@ to spawn-cars
 end
 
 to go
+  let sum_distance 0
   ask turtles [
     if not at-destination? [
       move-along-road
+      set sum_distance sum_distance + distance destination
     ]
     if at-destination? [
       die
@@ -44,6 +46,11 @@ to go
   ]
 
   set cars-on-the-road count turtles
+  set cumulated-distance sum_distance
+
+  if cars-on-the-road = 0 [
+    stop
+  ]
 
   tick
 end
@@ -64,8 +71,8 @@ to-report best-way-to [ goal ]
 
   ; of all the visible route patches, select the ones
   ; that would take me closer to my destination
-  let visible-patches patches in-radius 5
-  let visible-routes visible-patches with [ pcolor = grey ]
+  let visible-patches patches in-radius 2
+  let visible-routes visible-patches with [ pcolor = grey and not any? turtles-here ]
   let routes-that-take-me-closer visible-routes with [
     distance goal < [ distance goal - 1 ] of myself
   ]
@@ -83,11 +90,11 @@ end
 GRAPHICS-WINDOW
 210
 10
-869
-670
+919
+720
 -1
 -1
-1.3
+1.0
 1
 10
 1
@@ -98,9 +105,9 @@ GRAPHICS-WINDOW
 1
 1
 0
-500
+700
 0
-500
+700
 0
 0
 1
@@ -108,10 +115,10 @@ ticks
 30.0
 
 BUTTON
-48
-594
-111
-627
+37
+91
+164
+177
 NIL
 setup
 NIL
@@ -125,10 +132,10 @@ NIL
 1
 
 BUTTON
-48
-387
-111
-420
+38
+209
+164
+292
 NIL
 go
 T
@@ -142,15 +149,44 @@ NIL
 1
 
 MONITOR
-34
-50
-142
-95
+948
+397
+1056
+442
 NIL
 cars-on-the-road
 17
 1
 11
+
+PLOT
+948
+12
+1435
+388
+plot 1
+Time
+Cumulated Distance to Destination
+0.0
+100.0
+0.0
+1000.0
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -16777216 true "" "plot cumulated-distance"
+
+INPUTBOX
+22
+18
+177
+78
+number-of-cars
+500.0
+1
+0
+Number
 
 @#$#@#$#@
 ## WHAT IS IT?
