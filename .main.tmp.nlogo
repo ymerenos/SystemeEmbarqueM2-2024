@@ -1,63 +1,4 @@
-extensions [gis]
 
-globals [streets-dataset roads cars-on-the-road]
-
-turtles-own [
-  destination
-]
-
-to setup
-  clear-all
-  resize-world 0 700 0 700
-  set-patch-size 1
-  set streets-dataset gis:load-dataset "routes/le_mans_FINAL.shp"
-  gis:set-world-envelope (gis:envelope-of streets-dataset)
-
-  ask patches gis:intersecting streets-dataset [
-    set pcolor grey
-  ]
-
-  set roads patches with [pcolor = grey]
-  create-turtles 100 [
-    spawn-cars
-    set size 6
-  ]
-
-  set cars-on-the-road count turtles
-
-  reset-ticks
-end
-
-to spawn-cars
-  move-to one-of roads
-  set destination one-of roads
-end
-
-to go
-  ask turtles [
-    if not at-destination? [
-      move-along-road
-    ]
-    if at-destination? [
-      die
-    ]
-  ]
-
-  set cars-on-the-road count turtles
-
-  tick
-end
-
-to move-along-road
-  let potential-next-patches neighbors4 in-radius 1
-  let next-patch one-of potential-next-patches with [pcolor = grey]
-  face next-patch
-  fd 1
-end
-
-to-report at-destination?
-  report patch-here = destination
-end
 @#$#@#$#@
 GRAPHICS-WINDOW
 210
@@ -123,10 +64,10 @@ NIL
 MONITOR
 34
 50
-142
+113
 95
 NIL
-cars-on-the-road
+turtles-alive
 17
 1
 11
