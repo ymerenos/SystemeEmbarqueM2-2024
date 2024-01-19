@@ -1,10 +1,21 @@
 extensions [gis]
 
-globals [ streets-dataset roads cars-on-the-road cumulated-distance]
+globals [ streets-dataset roads cars-on-the-road cumulated-distance time-list average-time]
 
 turtles-own [
   destination
+  time-to-destination
 ]
+
+to run-simulation
+  repeat num-times [
+    setup
+    while [cars-on-the-road > 0] [
+      go
+    ]
+  ]
+
+end
 
 to setup
   clear-all
@@ -25,6 +36,7 @@ to setup
 
   set cars-on-the-road count turtles
   set cumulated-distance 0
+  set time-list []
   reset-ticks
 end
 
@@ -41,6 +53,8 @@ to go
       set sum_distance sum_distance + distance destination
     ]
     if at-destination? [
+      set time-to-destination ticks - time-to-destination
+      set time-list lput time-to-destination time-list
       die
     ]
   ]
@@ -49,6 +63,13 @@ to go
   set cumulated-distance sum_distance
 
   if cars-on-the-road = 0 [
+    set average-time mean time-list
+    print (word "Average time: " average-time " ticks.")
+    file-open "results.txt"
+    file-write ticks
+    file-write ","
+    file-print average-time
+    file-close
     stop
   ]
 
@@ -183,10 +204,60 @@ INPUTBOX
 177
 78
 number-of-cars
-500.0
+200.0
 1
 0
 Number
+
+MONITOR
+949
+457
+1036
+502
+NIL
+average-time
+17
+1
+11
+
+MONITOR
+953
+516
+1010
+561
+NIL
+ticks
+17
+1
+11
+
+INPUTBOX
+18
+355
+180
+415
+num-times
+10.0
+1
+0
+Number
+
+BUTTON
+41
+473
+166
+562
+NIL
+run-simulation\n
+T
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
