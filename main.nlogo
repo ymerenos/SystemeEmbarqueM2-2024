@@ -51,9 +51,9 @@ to go
     if not at-destination? [
       move-along-road
       set sum_distance sum_distance + distance destination
+      set time-to-destination time-to-destination + 1
     ]
     if at-destination? [
-      set time-to-destination ticks - time-to-destination
       set time-list lput time-to-destination time-list
       die
     ]
@@ -204,7 +204,7 @@ INPUTBOX
 177
 78
 number-of-cars
-200.0
+1000.0
 1
 0
 Number
@@ -237,7 +237,7 @@ INPUTBOX
 180
 415
 num-times
-10.0
+50.0
 1
 0
 Number
@@ -249,7 +249,7 @@ BUTTON
 562
 NIL
 run-simulation\n
-T
+NIL
 1
 T
 OBSERVER
